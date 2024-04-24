@@ -1,0 +1,57 @@
+<%= form_with(model: task) do |form| %>
+  <% if task.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(task.errors.count, "error") %> prohibited this task from being saved:</h2>
+
+      <ul>
+        <% task.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, style: "display: block" %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :desc, style: "display: block" %>
+    <%= form.text_area :desc %>
+  </div>
+
+  <div>
+    <%= form.label :durationFrom, style: "display: block" %>
+    <%= form.time_field :durationFrom %>
+  </div>
+
+  <div>
+    <%= form.label :durationTo, style: "display: block" %>
+    <%= form.time_field :durationTo %>
+  </div>
+
+  <div>
+    <%= form.label :dueDate, style: "display: block" %>
+    <%= form.date_field :dueDate %>
+  </div>
+
+  <div>
+    <%= form.label :urgency, style: "display: block" %>
+    <%= form.number_field :urgency %>
+  </div>
+
+  <div>
+    <%= form.label :calendar, style: "display: block" %>
+    <%= form.text_field :calendar %>
+  </div>
+
+  <div>
+    <%= form.label :status, style: "display: block" %>
+    <%= form.check_box :status %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
