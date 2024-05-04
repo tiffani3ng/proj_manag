@@ -6,11 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Task Scheduler</title>
 <script>
-function addTask() {
+function showTaskBox() {
   var taskForm = document.getElementById("addTaskBox");
   if (taskForm.style.display === "none") {
     taskForm.style.display = "block";
     document.getElementById("screenOpacity").style.opacity = "0.2";
+    document.getElementById("addTaskBox").reset();
   } else {
     taskForm.style.display = "none";
     document.getElementById("screenOpacity").style.opacity = "0";
@@ -18,7 +19,7 @@ function addTask() {
 }
 </script>
 <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-# <%= javascript_importmap_tags %>
+<%= javascript_importmap_tags %>
 </head>
 
 <body>
@@ -29,7 +30,7 @@ function addTask() {
         <li><a class="active" href="#">Today</a></li>
         <li><a href="#">View</a></li>
         <li><a href="#">Settings</a></li>
-        <li><a href="#" onclick="addTask()">Add task</a></li>
+        <li><a href="#" onclick="showTaskBox()">Add task</a></li>
       </ul>
     </nav>
   </header>
@@ -39,39 +40,54 @@ function addTask() {
     <!-- The form -->
     <div class="overlay" id="screenOpacity"></div>
     <div class="form-popup" id="addTaskBox">
-      <form action="/action_page.php" class="form-container">
+      
+      <form action="/tasks" class="form-container" accept-charset="UTF-8" method="post">
+        <input type="hidden" name="authenticity_token" value="...">
 
         <div style="display: inline-block;">
-          <label for="taskName"></label>
-          <input type="text" placeholder="Enter task name" name="taskName" required>
 
-          <label for="taskDesc"></label>
-          <input type="text" placeholder="Description" name="taskDesc">
+            <label for="task_title"></label>
+            <input type="text" placeholder="Enter task name" name="task[title]" id="task_title" required>
+
+            <label for="task_desc"></label>
+            <input type="text" placeholder="Description" name="task[desc]" id="task_desc">
+
         </div>
 
         <div style="display: inline-block;">
-          <label for="taskStart" style="margin: 5px 10px;">Duration:</label>
-          <input type="number" placeholder="From" name="taskStart" required style="margin: 5px 10px;">
-          <input type="number" placeholder="To" name="taskEnd" required style="margin: 5px 10px;">
+
+          <label for="task_durationFrom" style="margin: 5px 10px;">Duration:</label>
+          <input type="time" placeholder="From" name="task[durationFrom]" id="task_durationFrom" style="margin: 5px 10px;" required>
+
+          <label for="task_durationTo"></label>
+          <input type="time" placeholder="To" name="task[durationTo]" id="task_durationTo" style="margin: 5px 10px;" required>
+
           <br><br>
+
           <label for="taskDate" style="margin: 5px 10px;">Due Date: </label>
-          <input type="date" name="taskDate" required>
+          <input type="date" name="task[dueDate]" id="task_dueDate" required>
+
           <br><br>
+
           <label for="taskUrgency" style="margin: 5px 10px;">Urgency: </label>
-          <select name="urgency" id="urgency">
+          <select name="task[urgency]" id="task_urgency">
             <option value="" selected="selected">Select</option>
+            <option value="1">Not Urgent</option>
+            <option value="2">Urgent</option>
+            <option value="3">Very Urgent</option>
           </select>
 
         </div>
         <br>
         <div style="display: flex; justify-content: center;">
           <div>
-            <button type="submit" class="btn">Save</button>
-            <button type="button" class="btn cancel" onclick="addTask()">Close</button>
+            <input type="submit" class="btn" name="commit" value="Save task" data-disable-with="Save task">
+            <button type="button" class="btn cancel" onclick="showTaskBox()">Close</button>
           </div>
         </div>
       </form>
       </div>
+
     <div style="display: inline-block; width: 50%;">
       <h2>MONDAY</h2>
     </div>
@@ -80,10 +96,7 @@ function addTask() {
 
 <div id="tasks">
   <% @tasks.each do |task| %>
-    <%= render task %>
-    <p>
-      <%= link_to "Show this task", task %>
-    </p>
+    <%= link_to task.title, task %>
   <% end %>
 </div>
     </div>

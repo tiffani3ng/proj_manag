@@ -8,6 +8,7 @@ class TasksController < ApplicationController
 
   # GET /tasks/1 or /tasks/1.json
   def show
+    @tasks = Task.find(params[:id])
   end
 
   # GET /tasks/new
@@ -23,17 +24,10 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
 
-    respond_to do |format|
-      if @task.save
-        # code to set up congratulations message
-        format.html { redirect_to task_url(@task), notice: "Task was successfully created." }
-        format.json { render :show, status: :created, location: @task }
-        redirect_to task_path(@task.id) # go to show page for @task
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @task.errors, status: :unprocessable_entity }
-	render :new, status: :unprocessable_entity
-      end
+    if @task.save
+     redirect_to @task
+    else
+     render :new, status: :unprocessable_entity
     end
   end
 
